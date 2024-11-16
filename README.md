@@ -1,15 +1,13 @@
 # mp-blockchains-maven
 
-An exploration of blockchains in Java.
+Sam's version of an MP in which we explore blockchains in Java.
 
 Authors
 
-* Your name here.
-* Your name here.
-* Samuel A. Rebelsky (starter code)
+* Samuel A. Rebelsky
 
 Acknowledgements
 
 * _Forthcoming_.
 
-This code may be found at <https://github.com/USERNAME/mp-blockchains-maven>. The original code may be found at <https://github.com/Grinnell-CSC207/mp-blockchinas-maven>.
+This code may be found at <https://github.com/rebelsky/mp-blockchains-maven>. The original code may be found at <https://github.com/Grinnell-CSC207/mp-blockchinas-maven>.
