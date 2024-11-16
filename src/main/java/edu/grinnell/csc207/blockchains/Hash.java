@@ -76,7 +76,7 @@ public class Hash {
   public String toString() {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < bytes.length; i++) {
-      result.append(String.format("%02x", bytes[i]));
+      result.append(String.format("%02X", bytes[i]));
     } // for
     return result.toString();
   } // toString()
