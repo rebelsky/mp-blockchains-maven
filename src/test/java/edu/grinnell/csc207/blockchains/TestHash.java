@@ -65,7 +65,7 @@ public class TestHash {
     assertEquals("0E", (new Hash(new byte[] {14})).toString(), "14 -> 0E");
     assertEquals("0F", (new Hash(new byte[] {15})).toString(), "15 -> 0F");
     assertEquals("10", (new Hash(new byte[] {16})).toString(), "16 -> 10");
-    assertEquals("10", (new Hash(new byte[] {26})).toString(), "16 -> 1A");
+    assertEquals("1A", (new Hash(new byte[] {26})).toString(), "26 -> 1A");
     assertEquals("FF", (new Hash(new byte[] {(byte) 255})).toString(),
         "255 -> FF");
     assertEquals("FF", (new Hash(new byte[] {(byte) 254})).toString(),
