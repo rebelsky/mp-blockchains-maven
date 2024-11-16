@@ -30,7 +30,6 @@ public class TestHash {
     assertEquals(8, h.get(5), "element 5 of basic hash");
     assertArrayEquals(new byte[] {1, 1, 2, 3, 5, 8}, h.getBytes(),
         "bytes of basic hash");
-    assertEquals("010102030508", h.toString(), "basic hash as string");
     assertTrue(h.equals(new Hash(new byte[] {1, 1, 2, 3, 5, 8})),
         "basic hash equals a hash with the same bytes");
     assertFalse(h.equals(new Hash(new byte[] {1, 1, 2, 3, 5})),
@@ -46,6 +45,34 @@ public class TestHash {
   } // basicTests
 
   /**
+   * Test the hash as a string.
+   */
+  @Test
+  public void testSimpleString() {
+    Hash h = new Hash(new byte[] {3, 1, 4, 1, 5});
+    assertEquals("0301040105", h.toString(), "toString() for simple hash");
+  } // testSimpleString()
+
+  /**
+   * Test the hash as a string with larger values.
+   */
+  @Test
+  public void testHarderStrings() {
+    assertEquals("0A", (new Hash(new byte[] {10})).toString(), "10 -> 0A");
+    assertEquals("0B", (new Hash(new byte[] {11})).toString(), "11 -> 0B");
+    assertEquals("0C", (new Hash(new byte[] {12})).toString(), "12 -> 0C");
+    assertEquals("0D", (new Hash(new byte[] {13})).toString(), "13 -> 0D");
+    assertEquals("0E", (new Hash(new byte[] {14})).toString(), "14 -> 0E");
+    assertEquals("0F", (new Hash(new byte[] {15})).toString(), "15 -> 0F");
+    assertEquals("10", (new Hash(new byte[] {16})).toString(), "16 -> 10");
+    assertEquals("10", (new Hash(new byte[] {26})).toString(), "16 -> 1A");
+    assertEquals("FF", (new Hash(new byte[] {(byte) 255})).toString(),
+        "255 -> FF");
+    assertEquals("FF", (new Hash(new byte[] {(byte) 254})).toString(),
+        "254 -> FE");
+  } // testHarderStrings
+
+  /**
    * Ensure that future modifications to the byte array don't
    * affect the hash.
    */
@@ -58,7 +85,7 @@ public class TestHash {
 
     bytes[1] = 9;
     assertFalse(h.equals(new Hash(bytes)), 
-        "hash should not hash built from modified bytes");
+        "hash should not equal hash built from modified bytes");
     assertNotEquals(bytes[1], h.get(1), "byte 1 has changed");
     assertEquals(bytes[0], h.get(0), "byte 0 is the same");
     assertEquals(bytes[2], h.get(2), "byte 2 is the same");
