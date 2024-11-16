@@ -1,5 +1,7 @@
 package edu.grinnell.csc207.blockchains;
 
+import java.util.Arrays;
+
 /**
  * Encapsulated hashes.
  *
@@ -10,6 +12,11 @@ public class Hash {
   // +--------+------------------------------------------------------
   // | Fields |
   // +--------+
+
+  /**
+   * The bytes in the hash.
+   */
+  byte[] bytes;
 
   // +--------------+------------------------------------------------
   // | Constructors |
@@ -22,7 +29,7 @@ public class Hash {
    *   The data to copy into the hash.
    */
   public Hash(byte[] data) {
-    // STUB
+    this.bytes = Arrays.copyOf(data, data.length);
   } // Hash(byte[])
 
   // +---------+-----------------------------------------------------
@@ -35,7 +42,7 @@ public class Hash {
    * @return the number of bytes in the hash.
    */
   int length() {
-    return 0;   // STUB
+    return this.bytes.length;
   } // length()
 
   /**
@@ -48,7 +55,7 @@ public class Hash {
    * @return the ith byte
    */
   public byte get(int i) {
-    return 0;   // STUB
+    return this.bytes[i];
   } // get()
 
   /**
@@ -58,7 +65,7 @@ public class Hash {
    * @return a copy of the bytes in the hash.
    */
   public byte[] getBytes() {
-    return new byte[] {1, 2, 3, 4, 5};      // STUB
+    return Arrays.copyOf(bytes, bytes.length);
   } // getBytes()
 
   /**
@@ -67,7 +74,11 @@ public class Hash {
    * @return the hash as a hex string.
    */
   public String toString() {
-    return "";          // STUB
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < bytes.length; i++) {
+      result.append(String.format("%02x", bytes[i]));
+    } // for
+    return result.toString();
   } // toString()
 
   /**
@@ -80,8 +91,20 @@ public class Hash {
    *   otherwise.
    */
   public boolean equals(Object other) {
-    return false;       // STUB
+    return (other instanceof Hash) && this.equals((Hash) other);
   } // equals(Object)
+
+  /**
+   * Determine if this is equal to another hash.
+   *
+   * @param other
+   *   The hash to compare to.
+   * @return true if the two hashes have equivalent byte arrays and
+   *   false otherwise.
+   */
+  public boolean equals(Hash other) {
+    return Arrays.equals(this.bytes, other.bytes);
+  } // equals(Hash)
 
   /**
    * Get the hash code of this object.
