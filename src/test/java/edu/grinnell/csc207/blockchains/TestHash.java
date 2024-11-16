@@ -68,7 +68,7 @@ public class TestHash {
     assertEquals("1A", (new Hash(new byte[] {26})).toString(), "26 -> 1A");
     assertEquals("FF", (new Hash(new byte[] {(byte) 255})).toString(),
         "255 -> FF");
-    assertEquals("FF", (new Hash(new byte[] {(byte) 254})).toString(),
+    assertEquals("FE", (new Hash(new byte[] {(byte) 254})).toString(),
         "254 -> FE");
   } // testHarderStrings
 
