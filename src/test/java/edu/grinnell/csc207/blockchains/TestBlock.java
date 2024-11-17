@@ -224,7 +224,7 @@ public class TestBlock {
     Block b = new Block(5, t, ph, (h) -> (h.length() > 0) && (h.get(0) == 0));
     assertEquals(0, b.getHash().get(0), 
         "hash in validated block starts with 0");
-    assertEquals(expectedHash(b), b.getHash(), 
+    assertArrayEquals(expectedHash(b), b.getHash().getBytes(), 
         "correct hash in validated block");
   } // validatedHashTest()
 
