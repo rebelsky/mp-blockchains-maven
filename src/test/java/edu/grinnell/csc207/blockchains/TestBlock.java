@@ -50,7 +50,7 @@ public class TestBlock {
    *   The bytes of that integer.
    */
   static byte[] intToBytes(int i) {
-    intBuffer.reset();
+    intBuffer.clear();
     return intBuffer.putInt(i).array();
   } // intToBytes(int)
 
@@ -64,7 +64,7 @@ public class TestBlock {
    *   The bytes in that long.
    */
   static byte[] longToBytes(long l) {
-    longBuffer.reset();
+    longBuffer.clear();
     return longBuffer.putLong(l).array();
   } // longToBytes()
 
