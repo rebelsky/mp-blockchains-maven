@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * @author Samuel A. Rebelsky
  */
-class Block {
+public class Block {
   // +-----------+---------------------------------------------------
   // | Constants |
   // +-----------+
@@ -208,7 +208,7 @@ class Block {
    *
    * @return the number of the block.
    */
-  int getNum() {
+  public int getNum() {
     return this.num;
   } // getNum()
 
@@ -217,7 +217,7 @@ class Block {
    *
    * @return the transaction.
    */
-  Transaction getTransaction() {
+  public Transaction getTransaction() {
     return this.transaction;
   } // getTransaction()
 
@@ -226,7 +226,7 @@ class Block {
    *
    * @return the nonce.
    */
-  long getNonce() {
+  public long getNonce() {
     return this.nonce;
   } // getNonce()
 
