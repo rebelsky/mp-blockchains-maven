@@ -10,6 +10,21 @@ public class BlockChain {
   // | Fields |
   // +--------+
 
+  /**
+   * The front of the chain.
+   */
+  Node front;
+
+  /**
+   * The back of the chain.
+   */
+  Node back;
+
+  /**
+   * The validator.
+   */
+   HashValidator validator;
+
   // +--------------+------------------------------------------------
   // | Constructors |
   // +--------------+
@@ -21,7 +36,14 @@ public class BlockChain {
    *   The validator used to check elements.
    */
   public BlockChain(HashValidator check) {
-    // STUB
+    this.validator = check;
+    Block b = 
+        new Block(0, 
+            new Transaction("", "", 0), 
+            new Hash(new byte[] {}), 
+            validator);
+    this.front = new Node(b);
+    this.back = this.front;
   } // BlockChain(HashValidator)
 
   // +---------+-----------------------------------------------------
@@ -97,3 +119,49 @@ public class BlockChain {
   } // isCorrect()
 
 } // class BlockChain
+
+/**
+ * Nodes in the BlockChain.
+ */
+class Node {
+  // +--------+------------------------------------------------------
+  // | Fields |
+  // +--------+
+
+  /**
+   * The block.
+   */
+  Block block;
+
+  /**
+   * The next node.
+   */
+  Node next;
+
+  // +--------------+------------------------------------------------
+  // | Constructors |
+  // +--------------+
+  
+  /**
+   * Create a node given both block and next.
+   *
+   * @param b
+   *   The block.
+   * @param n
+   *   The next node.
+   */
+  Node(Block b, Node n) {
+    this.block = b;
+    this.next = n;
+  } // Node(Block, Node)
+
+  /**
+   * Create a node given just the block.
+   *
+   * @param b
+   *   The block.
+   */
+  Node(Block b) {
+    this(b, null);
+  } // Node(Block)
+} // class Node
