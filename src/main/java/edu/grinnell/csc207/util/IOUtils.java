@@ -59,4 +59,37 @@ public class IOUtils {
     return result;
   } // readInt(PrintWriter, BufferedReader, String)
 
+  /**
+   * Read a long.
+   *
+   * @param pen
+   *   Where to print the prompt.
+   * @param eyes
+   *   How to read input.
+   * @param prompt
+   *   The prompt to print.
+   *
+   * @return the long read
+   *
+   * @throws IOException
+   *   If an I/O exception occurs.
+   */
+  public static long readLong(PrintWriter pen, BufferedReader eyes,
+      String prompt) throws IOException {
+    long result = 0;
+    boolean done = false;
+    while (!done) {
+      pen.print(prompt);
+      pen.flush();
+      String response = eyes.readLine();
+      try {
+        result = Long.parseLong(response);
+        done = true;
+      } catch (NumberFormatException e) {
+        pen.printf("I'm sorry, but '%s' isn't a long integer.\n", response);
+      } // try/catch
+    } // while
+    return result;
+  } // readLong(PrintWriter, BufferedReader, String)
+
 } // class IOUtils
