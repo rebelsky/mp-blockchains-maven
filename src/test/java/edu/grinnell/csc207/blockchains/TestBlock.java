@@ -198,7 +198,7 @@ public class TestBlock {
         "transaction in 7-valid deposit block");
     assertEquals(ph, b.getPrevHash(), 
         "previous hash in 7-valid deposit block");
-    assertEquals(5, b.getHash().get(0), 
+    assertEquals(7, b.getHash().get(0), 
         "valid hash in 7-valid deposit block (starts with 7)");
   } // anotherValidatedDepositTest()
 
