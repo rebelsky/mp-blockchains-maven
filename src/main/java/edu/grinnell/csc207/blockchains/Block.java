@@ -254,6 +254,10 @@ public class Block {
    * @return a string representation of the block.
    */
   public String toString() {
-    return "";  // STUB
+    return 
+        String.format(
+            "Block %d (Transaction: %s, Nonce: %d, prevHash: %s, hash: %s)",
+            this.num, this.transaction.toString(), this.nonce,
+            this.prevHash.toString(), this.hash.toString());
   } // toString()
 } // class Block
