@@ -125,7 +125,7 @@ public class Block {
    * @param check
    *   The validator used to check the block.
    */
-  Block(int number, Transaction trans, Hash ph, HashValidator check) {
+  public Block(int number, Transaction trans, Hash ph, HashValidator check) {
     this.num = number;
     this.transaction = trans;
     this.prevHash = ph;
@@ -144,7 +144,7 @@ public class Block {
    * @param theNonce
    *   The nonce of the block.
    */
-  Block(int number, Transaction trans, Hash ph, long theNonce) {
+  public Block(int number, Transaction trans, Hash ph, long theNonce) {
     this.num = number;
     this.transaction = trans;
     this.prevHash = ph;
