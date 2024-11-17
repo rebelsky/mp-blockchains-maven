@@ -1,7 +1,11 @@
 package edu.grinnell.csc207.main;
 
+import edu.grinnell.csc207.blockchains.Block;
 import edu.grinnell.csc207.blockchains.BlockChain;
 import edu.grinnell.csc207.blockchains.HashValidator;
+import edu.grinnell.csc207.blockchains.Transaction;
+
+import edu.grinnell.csc207.util.IOUtils;
 
 import java.io.PrintWriter;
 import java.io.BufferedReader;
@@ -80,6 +84,10 @@ public class BlockChainUI {
 
     boolean done = false;
 
+    String source;
+    String target;
+    int amount;
+
     while (!done) {
       pen.print("\nCommand: ");
       pen.flush();
@@ -87,13 +95,50 @@ public class BlockChainUI {
       if (command == null) {
         command = "quit";
       } // if
+
       switch (command.toLowerCase()) {
+        case "append":
+          pen.printf("Command '%s' is not yet implemented", command);
+          break;
+
+        case "balance":
+          pen.printf("Command '%s' is not yet implemented", command);
+          break;
+
+        case "blocks":
+          pen.printf("Command '%s' is not yet implemented", command);
+          break;
+
+        case "check":
+          pen.printf("Command '%s' is not yet implemented", command);
+          break;
+
         case "help":
           instructions(pen);
           break;
 
+        case "mine":
+          source = IOUtils.readLine(pen, eyes, "Source (return for deposit): ");
+          target = IOUtils.readLine(pen, eyes, "Target: ");
+          amount = IOUtils.readInt(pen, eyes, "Amount: ");
+          Block b = chain.mine(new Transaction(source, target, amount));
+          pen.println("Nonce: " + b.getNonce());
+          break;
+
         case "quit":
           done = true;
+          break;
+
+        case "remove":
+          pen.printf("Command '%s' is not yet implemented", command);
+          break;
+
+        case "transactions":
+          pen.printf("Command '%s' is not yet implemented", command);
+          break;
+
+        case "users":
+          pen.printf("Command '%s' is not yet implemented", command);
           break;
 
         default:
