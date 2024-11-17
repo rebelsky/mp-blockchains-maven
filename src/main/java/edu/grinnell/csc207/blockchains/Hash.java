@@ -91,6 +91,7 @@ public class Hash {
    *   otherwise.
    */
   public boolean equals(Object other) {
+    // System.err.printf("Comparing a hash to %s\n", other.toString());
     return (other instanceof Hash) && this.equals((Hash) other);
   } // equals(Object)
 
@@ -103,7 +104,11 @@ public class Hash {
    *   false otherwise.
    */
   public boolean equals(Hash other) {
-    return Arrays.equals(this.bytes, other.bytes);
+    // System.err.printf("Comparing %s to %s\n", Arrays.toString(this.bytes), 
+    //    Arrays.toString(other.bytes));
+    boolean result = Arrays.equals(this.bytes, other.bytes);
+    // System.err.println("  " + result);
+    return result;
   } // equals(Hash)
 
   /**
