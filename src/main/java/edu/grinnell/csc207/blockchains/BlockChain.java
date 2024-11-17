@@ -14,6 +14,11 @@ public class BlockChain implements Iterable<Transaction> {
   // +--------+
 
   /**
+   * The number of blocks in the chain.
+   */
+  int size;
+
+  /**
    * The front of the chain.
    */
   Node front;
@@ -26,7 +31,7 @@ public class BlockChain implements Iterable<Transaction> {
   /**
    * The validator.
    */
-   HashValidator validator;
+  HashValidator validator;
 
   // +--------------+------------------------------------------------
   // | Constructors |
@@ -47,6 +52,7 @@ public class BlockChain implements Iterable<Transaction> {
             validator);
     this.front = new Node(b);
     this.back = this.front;
+    this.size = 1;
   } // BlockChain(HashValidator)
 
   // +---------+-----------------------------------------------------
@@ -67,7 +73,7 @@ public class BlockChain implements Iterable<Transaction> {
    * @return a new block with correct number, hashes, and such.
    */
   public Block mine(Transaction t) {
-    return new Block(10, t, new Hash(new byte[] {7}), 11);       // STUB
+    return new Block(this.size, t, this.back.block.getHash(), validator);
   } // mine(Transaction)
 
   /**
@@ -76,17 +82,19 @@ public class BlockChain implements Iterable<Transaction> {
    * @return the number of blocks in the chain, including the initial block.
    */
   public int getSize() {
-    return 2;   // STUB
+    return this.size;
   } // getSize()
 
   /**
    * Add a block to the end of the chain.
    *
-   * @param blk
+   * @param block
    *   The block to add to the end of the chain.
    */
-  public void append(Block blk) {
-    // STUB
+  public void append(Block block) {
+    this.back.next = new Node(block);
+    this.back = this.back.next;
+    this.size++;
   } // append()
 
   /**
@@ -97,7 +105,17 @@ public class BlockChain implements Iterable<Transaction> {
    *   is removed).
    */
   public boolean removeLast() {
-    return true;        // STUB
+    if (this.front == this.back) {
+      return false;
+    } else {
+      Node current = this.front;
+      while (current.next != this.back) {
+        current = current.next;
+      } // while
+      this.back = current;
+      this.back.next = null;
+      return true;
+    } // if/else
   } // removeLast()
 
   /**
@@ -147,9 +165,9 @@ public class BlockChain implements Iterable<Transaction> {
    *
    * @return that user's balance (or 0, if the user is not in the system).
    */
-  public int balance() {
+  public int balance(String user) {
     return 0;   // STUB
-  } // balance()
+  } // balance(String)
 
   /**
    * Get an interator for all the blocks in the chain.
@@ -158,12 +176,16 @@ public class BlockChain implements Iterable<Transaction> {
    */
   public Iterator<Block> blocks() {
     return new Iterator<Block>() {
+      Node current = BlockChain.this.front;
+
       public boolean hasNext() {
-        return false;   // STUB
+        return this.current != null;
       } // hasNext()
 
       public Block next() {
-        throw new NoSuchElementException();     // STUB
+        Block block = this.current.block;
+        current = this.current.next;
+        return block;
       } // next()
     };
   } // blocks()
