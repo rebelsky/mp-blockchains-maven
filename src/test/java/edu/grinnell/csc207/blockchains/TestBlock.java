@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -69,14 +70,14 @@ public class TestBlock {
   } // longToBytes()
 
   /**
-   * Compute the expecgted hash of a block.
+   * Compute the expected hash of a block.
    *
    * @param block
    *   The block whose hash we want to compute.
    *
    * @return the expected hash of that block.
    */
-  public byte[] expectedHash(Block block) {
+  static byte[] expectedHash(Block block) {
     md.update(intToBytes(block.getNum()));
     md.update(block.getTransaction().getSource().getBytes());
     md.update(block.getTransaction().getTarget().getBytes());
@@ -115,7 +116,7 @@ public class TestBlock {
     Hash ph = new Hash(new byte[] {3, 4, 5});
     Block b = new Block(10, t, ph, 67);
     
-    assertEquals(12, b.getNum(), "number of block");
+    assertEquals(10, b.getNum(), "number of block");
     assertEquals(t, b.getTransaction(), "transaction in block");
     assertEquals(ph, b.getPrevHash(), "previous hash");
     assertEquals(67, b.getNonce(), "nonce");
@@ -171,7 +172,7 @@ public class TestBlock {
    * Simple block stuff with a slightly more complicated validator.
    */
    @Test
-   public void anotherValidatedBlockTest() {
+   public void startsWith5ValidatedBlockTest() {
     Transaction t = new Transaction("Source", "Target", 100);
     Hash ph = new Hash(new byte[] {(byte) 255});
     Block b = new Block(8, t, ph, (h) -> (h.length() > 1) && (h.get(0) == 5));
@@ -186,7 +187,7 @@ public class TestBlock {
    * A deposit with a slightly more complicated validator.
    */
    @Test
-   public void anotherValidatedDepositTest() {
+   public void startsWith7ValidatedDepositTest() {
     Transaction t = new Transaction("", "A Nony Moose", 777);
     Hash ph = new Hash(new byte[] {77, 77, 77, 77});
     Block b = new Block(7, t, ph, (h) -> (h.length() > 0) && (h.get(0) == 7));
@@ -209,7 +210,7 @@ public class TestBlock {
     Transaction t = new Transaction("Sam", "Sam", 50);
     Hash ph = new Hash(new byte[] {10, 20, 30, 40, 50});
     Block b = new Block(5, t, ph, 100);
-    assertEquals(expectedHash(b), b.getHash(), "correct hash");
+    assertArrayEquals(expectedHash(b), b.getHash().getBytes(), "correct hash");
   } // hashTest()
 
   /**
@@ -217,7 +218,7 @@ public class TestBlock {
    * and valid hash.
    */
   @Test
-  public void validatedHashTest() {
+  public void aValidatedHashTest() {
     Transaction t = new Transaction("Rebel", "Sky", 250);
     Hash ph = new Hash(new byte[] {42, 42, 42, 42, 42, 42});
     Block b = new Block(5, t, ph, (h) -> (h.length() > 0) && (h.get(0) == 0));
@@ -241,5 +242,21 @@ public class TestBlock {
     assertEquals(t, b.getTransaction(), "correct transaction in initial block");
     assertEquals(ph, b.getPrevHash(), "correct previous hash in initial block");
   } // initialBlockTest()
+
+  /**
+   * Test that the toString method works.
+   * Forthcoming.
+   */
+  @Test
+  public void toStringTest() {
+  } // toStringTest()
+
+  /**
+   * Test that the toString method works with a deposit.
+   * Forthcoming.
+   */
+  @Test
+  public void toStringDepositTest() {
+  } // toStringDepositTest()
 
 } // class TestBlock
