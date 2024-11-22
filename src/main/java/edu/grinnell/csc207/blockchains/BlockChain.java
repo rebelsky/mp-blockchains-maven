@@ -1,6 +1,7 @@
 package edu.grinnell.csc207.blockchains;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -60,6 +61,18 @@ public class BlockChain implements Iterable<Transaction> {
   // | Helpers |
   // +---------+
 
+  /**
+   * An alias for "throw new Exception".
+   *
+   * @param message
+   *   The message to include in the exception.
+   *
+   * @throws Exception
+   */
+  void fail(String message) throws Exception {
+    throw new Exception(message);
+  } // fail(String)
+
   // +---------+-----------------------------------------------------
   // | Methods |
   // +---------+
@@ -99,7 +112,7 @@ public class BlockChain implements Iterable<Transaction> {
   public void append(Block block) {
     Hash hash = block.getHash();
     if (!validator.isValid(hash)) {
-      throw new IllegalArgumentException("Invalid hash in appened block: " 
+      throw new IllegalArgumentException("Invalid hash in appended block: " 
           + hash);
     }  // if
     Block alt = new Block(block.getNum(), block.getTransaction(),
@@ -134,6 +147,7 @@ public class BlockChain implements Iterable<Transaction> {
       } // while
       this.back = current;
       this.back.next = null;
+      this.size--;
       return true;
     } // if/else
   } // removeLast()
@@ -156,10 +170,109 @@ public class BlockChain implements Iterable<Transaction> {
    * @return true if the blockchain is correct and false otherwise.
    */
   public boolean isCorrect() {
-    Iterator<Block> blocks = this.blocks();
-    blocks.next();      // Skip the first
-    HashMap<String,Integer> balances = new HashMap<String,Integer>(); 
+    try { 
+      this.check();
+      return true;
+    } catch (Exception e) {
+      return false;
+    } // try/catch
   } // isCorrect()
+
+  /**
+   * Determine if the blockchain is correct in that (a) the balances are
+   * legal/correct at every step, (b) that every block has a correct
+   * previous hash field, (c) that every block has a hash that is correct
+   * for its contents, and (d) that every block has a valid hash.
+   *
+   * @throws Exception
+   *   If things are wrong at any block.
+   */
+  public void check() throws Exception {
+    Iterator<Block> blocks = this.blocks();
+
+    // Grab the first block and check it out.
+    Block prev = blocks.next();      // Get the first block.
+    Transaction t = prev.getTransaction();
+    if (!"".equals(t.getSource())) {
+      fail(String.format("Initial block has invalid source: \"%s\"",
+          t.getSource()));
+    } // if
+    if (!"".equals(t.getTarget())) {
+      fail(String.format("Initial block has invalid target: \"%s\"",
+          t.getTarget()));
+    } // if
+    if (0 != t.getAmount()) {
+      fail(String.format("Initial block has invalid amount: %d", 
+          t.getAmount()));
+    } // if
+
+    HashMap<String,Integer> balances = new HashMap<String,Integer>(); 
+    while (blocks.hasNext()) {
+      // Gather basic information.
+      Block block = blocks.next();
+      Hash hash = block.getHash();
+      int num = block.getNum();
+
+      // Make sure the hash is valid.
+      if (!validator.isValid(hash)) {
+        fail(String.format("Invalid hash in block %d: $s" ,
+            num, hash.toString()));
+      }  // if
+
+      // Make sure the hash is correct.
+      Block alt = new Block(block.getNum(), block.getTransaction(),
+          block.getPrevHash(), block.getNonce());
+      if (!alt.getHash().equals(hash)) {
+        fail(String.format("Incorrect hash in block %d: %s (expected %s)",
+            num, hash.toString(), alt.getHash().toString()));
+      } // if
+    
+      // Make sure the previous hash is correct.
+      if (!prev.getHash().equals(block.getPrevHash())) {
+        fail(String.format("Invalid prevHash in block %d: %s (expected %s)",
+            num, block.getPrevHash(), prev.getHash()));
+      } // if
+
+      // Prepare to check the transaction.
+      t = block.getTransaction();
+
+      // Check for valid source.
+      String source = t.getSource();
+      if (!"".equals(source) && !balances.containsKey(source)) {
+        fail(String.format("Unknown source in block %d: \"%s\"", num, source));
+      } // if
+
+      // Check for valid target.
+      String target = t.getTarget();
+      if ("".equals(target)) {
+        fail(String.format("Invalid target in block %d: empty string", num));
+      } // if
+
+      // Check for valid amount.
+      int amount = t.getAmount();
+      if (amount < 0) {
+        fail(String.format("Negative amount in block %d: %d", num, amount));
+      } // if (amount < 0)
+      if ((!"".equals(source)) && (amount > balances.get(source))) {
+        fail(String.format("Insufficient balance for %s in block %d:"
+            + " Has %d, needs %d",
+            source, num, balances.get(source), amount));
+      } // if
+
+      // Update the balances
+      if (!"".equals(source)) {
+        balances.put(source, balances.get(source) - amount);
+      } // if
+      if (!balances.containsKey(target)) {
+        balances.put(target, amount);
+      } else {
+        balances.put(target, balances.get(target) + amount);
+      } // if/else
+
+      // Update the previous block
+      prev = block;
+    } // while
+  } // check()
 
   /**
    * Return an iterator of all the people who participated in the
@@ -169,12 +282,26 @@ public class BlockChain implements Iterable<Transaction> {
    */
   public Iterator<String> users() {
     return new Iterator<String>() {
+      HashSet<String> returned = new HashSet<String>();
+      Node current = BlockChain.this.front;
+      {
+        current = current.next;
+      } // current
       public boolean hasNext() {
-        return false;   // STUB
+        return current != null;
       } // hasNext()
 
       public String next() {
-        throw new NoSuchElementException();     // STUB
+        String user = current.block.getTransaction().getTarget();
+        returned.add(user);
+        String nextUser = "";
+        do {
+          current = current.next;
+          if (current != null) {
+            nextUser = current.block.getTransaction().getTarget();
+          } // if
+        } while ((current != null) && (returned.contains(nextUser)));
+        return user;
       } // next()
     };
   } // users()

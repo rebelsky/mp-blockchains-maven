@@ -20,7 +20,7 @@ public class Block {
   /**
    * Are we observing what's happening?
    */
-  static final boolean VERBOSE = true;
+  static final boolean VERBOSE = false;
 
   // +---------------+-----------------------------------------------
   // | Static fields |

@@ -27,7 +27,7 @@ public class BlockChainUI {
   /**
    * The number of bytes we validate. Should be set to 3 before submitting.
    */
-  static final int VALIDATOR_BYTES = 0;
+  static final int VALIDATOR_BYTES = 3;
 
   // +---------+-----------------------------------------------------
   // | Helpers |
@@ -108,10 +108,12 @@ public class BlockChainUI {
           amount = IOUtils.readInt(pen, eyes, "Amount: ");
           nonce = IOUtils.readLong(pen, eyes, "Nonce: ");
           try {
-            chain.append(new Block(chain.getSize(),
-                new Transaction(source, target, amount),
-                chain.getHash(),
-                nonce));
+            Block block = 
+                new Block(chain.getSize(), 
+                    new Transaction(source, target, amount), 
+                    chain.getHash(), nonce);
+            chain.append(block);
+            pen.println("Appended: " + block.toString());
           } catch (IllegalArgumentException e) {
             pen.println("Could not append: " + e.getMessage());
           } // try/catch
@@ -130,7 +132,12 @@ public class BlockChainUI {
           break;
 
         case "check":
-          pen.printf("Command '%s' is not yet implemented\n", command);
+          try {
+            chain.check();
+            pen.println("The blockchain checks out.");
+          } catch (Exception e) {
+            pen.println(e.getMessage());
+          } // try/catch
           break;
 
         case "comment":
@@ -148,7 +155,8 @@ public class BlockChainUI {
           target = IOUtils.readLine(pen, eyes, "Target: ");
           amount = IOUtils.readInt(pen, eyes, "Amount: ");
           Block b = chain.mine(new Transaction(source, target, amount));
-          pen.println("Nonce: " + b.getNonce());
+          pen.println();
+          pen.println("Use nonce: " + b.getNonce());
           break;
 
         case "quit":
@@ -171,7 +179,10 @@ public class BlockChainUI {
           break;
 
         case "users":
-          pen.printf("Command '%s' is not yet implemented\n", command);
+          Iterator<String> users = chain.users();
+          while (users.hasNext()) {
+            pen.println(users.next());
+          } // while
           break;
 
         default:
